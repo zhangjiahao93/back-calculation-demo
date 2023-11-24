@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div>
-      <div>请输入多个数字（一个数字占一行）可以直接从excel列复制，最多不要超过20个！</div>
+      <div>请输入多个数字（一个数字占一行）可以直接从excel列复制</div>
       <textarea rows="15" cols="50" v-model="text"></textarea>
     </div>
     <div>
@@ -27,7 +27,21 @@
 
 <script>
   import BC from "back-calculation";
-  import _ from "lodash";
+  function compact(array) {
+    let resIndex = 0;
+    const result = [];
+
+    if (array == null) {
+        return result;
+    }
+
+    for (const value of array) {
+        if (value) {
+            result[resIndex++] = value;
+        }
+    }
+    return result;
+}
   export default {
     name: "findNum",
     data() {
@@ -45,15 +59,13 @@
     methods: {
       compute() {
         this.resSum = this.sum;
-        let input = _.compact(this.text.split("\n")).map((v) => parseFloat(v));
+        let input = compact(this.text.split("\n")).map((v) => parseFloat(v));
         let sum = parseFloat(this.sum);
         let obj = new BC({ sum, input });
         this.filterValues = obj.getValues();
-        this.filterRows = obj.getRows();
         if (this.filterValues.length === 0) {
           alert("没有找到对应和！");
         }
-        console.log(input, this.sum);
         console.log(this.filterValues);
       },
     },
